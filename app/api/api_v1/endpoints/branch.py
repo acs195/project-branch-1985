@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, status
 from app.core.security import UserSecurity
 from app.domain.business.branch import BranchService
 from app.repos.db.storage.branch import BranchRepo
-from app.schemas.branch import BranchSchema, BranchCreateSchema, BranchUpdateSchema
+from app.schemas.branch import BranchCreateSchema, BranchSchema, BranchUpdateSchema
 from app.utils.exceptions.handlers import branch_exception_handler
 
 router = APIRouter()
@@ -14,13 +14,14 @@ router = APIRouter()
 @router.get("/{branch_id}", response_model=BranchSchema)
 @branch_exception_handler
 def get_branch(
-    branch_id: int,
+    branch_id: str,
     security: UserSecurity = Depends(),
     branch_repo: BranchRepo = Depends(),
 ) -> BranchSchema:
     """Get a single branch"""
     branch_srv = BranchService(branch_repo)
-    return branch_srv.get(branch_id)
+    branch = branch_srv.get(branch_id)
+    return branch
 
 
 @router.post("/", response_model=BranchSchema, status_code=status.HTTP_201_CREATED)
@@ -39,7 +40,7 @@ def create_branch(
 @router.put("/{branch_id}", response_model=BranchSchema)
 @branch_exception_handler
 def update_branch(
-    branch_id: int,
+    branch_id: str,
     branch_update: BranchUpdateSchema,
     security: UserSecurity = Depends(),
     branch_repo: BranchRepo = Depends(),

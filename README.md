@@ -23,6 +23,11 @@ With Python:
 
 ---
 
+## Mypy annotations check
+`sh ./scripts/run_mypy.sh`
+
+---
+
 ## Deploy Serverless using Zappa (API Gateway + Lambda)
 
 ### AWS Lambda Layer (virtualenv) 

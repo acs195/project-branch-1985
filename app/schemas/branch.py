@@ -3,24 +3,32 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Extra
 
 
 class BranchSchema(BaseModel):
     """This is the branch list schema"""
 
-    id: str
+    branch_id: str
     crm_id: str
     external_ledger_id: Optional[str]
     external_payments_card_id: Optional[str]
     created_by: str
-    creation_date: datetime
+    created_on: datetime
+    updated_on: Optional[datetime]
+
+    class Config:
+        extra = Extra.allow
+
+    def dict(self, **kwargs) -> dict:
+        kwargs.update(exclude_none=True, exclude={"data"})
+        return super().dict(**kwargs)
 
 
 class BranchCreateSchema(BaseModel):
     """This is the branch create schema"""
 
-    id: str
+    branch_id: str
     crm_id: str
 
 
@@ -29,3 +37,6 @@ class BranchUpdateSchema(BaseModel):
 
     external_ledger_id: Optional[str]
     external_payments_card_id: Optional[str]
+
+    class Config:
+        extra = Extra.allow

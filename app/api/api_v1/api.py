@@ -6,4 +6,4 @@ from app.api.api_v1.endpoints import branch
 
 api_router = APIRouter()
 
-api_router.include_router(branch.router, prefix="/branch", tags=["branch"])
+api_router.include_router(branch.router, prefix="/branches", tags=["branches"])

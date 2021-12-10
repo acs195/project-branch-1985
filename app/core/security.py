@@ -25,13 +25,14 @@ class UserSecurity:
     PWD_CONTEXT = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
     def __init__(self, token: str = Header(None)) -> None:
+        self.token_data: TokenDataSchema
         if settings.SECURITY_BYPASS:
-            self.token_data: TokenDataSchema = TokenDataSchema(**TOKEN_DATA_BYPPASED)
+            self.token_data = TokenDataSchema(**TOKEN_DATA_BYPPASED)
         else:
-            self.token_data: TokenDataSchema = self.validate_token(token)
+            self.token_data = self.validate_token(token)
 
     @property
-    def user_id(self):
+    def user_id(self) -> str:
         return self.token_data.user_id
 
     def validate_token(self, token: str) -> TokenDataSchema:

@@ -1,22 +1,26 @@
-from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute
-from pynamodb.models import Model
+"""This is the DB models module for branches"""
 
-from app.core.config import settings
+from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Extra, validator
 
 
-class BranchDDB(Model):
-    """Branch model in DynamoDB"""
+class BranchDDB(BaseModel):
+    """This class represents a branch in the domain"""
 
-    class Meta:
-        table_name = "branch-project-1985"
-        region = settings.REGION_ID
-        connect_timeout_seconds = 8
-        read_timeout_seconds = 8
-        max_retry_attempts = 1
+    branch_id: str
+    crm_id: str
+    created_by: str
+    created_on: datetime
+    updated_on: Optional[datetime]
 
-    branch_id = UnicodeAttribute(hash_key=True)
-    crm_id = UnicodeAttribute(range_key=True)
-    # external_ledger_id = UnicodeAttribute()
-    # external_payments_card_id = UnicodeAttribute()
-    created_by = UnicodeAttribute()
-    creation_date = UTCDateTimeAttribute()
+    class Config:
+        extra = Extra.allow
+
+    @validator("branch_id")
+    def parse_pk(cls, branch_id: str) -> str:
+        if "BRANCH" in branch_id:
+            return branch_id.split("#")[1]
+
+        return branch_id

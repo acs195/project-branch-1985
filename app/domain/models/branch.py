@@ -3,15 +3,19 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Extra
 
 
 class Branch(BaseModel):
     """This class represents a branch in the domain"""
 
-    id: str
+    branch_id: str
     crm_id: str
     external_ledger_id: Optional[str]
     external_payments_card_id: Optional[str]
     created_by: str
-    creation_date: datetime
+    created_on: datetime
+    updated_on: Optional[datetime]
+
+    class Config:
+        extra = Extra.allow
