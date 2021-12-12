@@ -16,3 +16,4 @@ requests==2.25.1
 s3transfer==0.4.2
 uvicorn==0.13.4
 uvloop==0.15.2
+zappa==0.54.1

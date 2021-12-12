@@ -1,0 +1,157 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Description: Create some of the base resources required
+
+Resources:
+
+# S3 bucket to store the lambda function package
+
+  BranchBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: branch-project-1985-storage
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: NameTag
+          Value: branch-project-1985
+
+# DynamoDB table
+
+  BranchDDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: branch-project-1985
+      AttributeDefinitions:
+        - AttributeName: branch_id
+          AttributeType: S
+        - AttributeName: data
+          AttributeType: S
+      KeySchema:
+        - AttributeName: branch_id
+          KeyType: HASH
+        - AttributeName: data
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+# Role
+
+  BranchRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: branch-project-1985-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+                - events.amazonaws.com
+                - lambda.amazonaws.com
+                - codebuild.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: branch-project-1985-zappa-permissions
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - lambda:CreateFunction
+                  - lambda:ListVersionsByFunction
+                  - lambda:GetLayerVersion
+                  - logs:DescribeLogStreams
+                  - events:PutRule
+                  - cloudformation:DescribeStackResource
+                  - lambda:GetFunctionConfiguration
+                  - apigateway:DELETE
+                  - logs:CreateLogStream
+                  - events:ListRuleNamesByTarget
+                  - sns:Publish
+                  - apigateway:PATCH
+                  - events:ListRules
+                  - cloudformation:UpdateStack
+                  - events:RemoveTargets
+                  - lambda:DeleteFunction
+                  - logs:FilterLogEvents
+                  - apigateway:GET
+                  - lambda:GetAlias
+                  - events:ListTargetsByRule
+                  - cloudformation:ListStackResources
+                  - events:DescribeRule
+                  - logs:DeleteLogGroup
+                  - apigateway:PUT
+                  - lambda:InvokeFunction
+                  - lambda:GetFunction
+                  - lambda:UpdateFunctionConfiguration
+                  - logs:CreateLogGroup
+                  - logs:PutLogEvents
+                  - cloudformation:DescribeStacks
+                  - events:DeleteRule
+                  - events:PutTargets
+                  - lambda:UpdateFunctionCode
+                  - lambda:AddPermission
+                  - cloudformation:CreateStack
+                  - cloudformation:DeleteStack
+                  - apigateway:POST
+                  - lambda:RemovePermission
+                  - lambda:GetPolicy
+        - PolicyName: branch-project-1985-storage-permissions
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource:
+                  - arn:aws:s3:::branch-project-1985-storage
+                  - arn:aws:s3:::branch-project-1985-storage/*
+                Action:
+                  - s3:DeleteObject
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:AbortMultipartUpload
+                  - s3:ListMultipartUploadParts
+                  - s3:ListBucket
+                  - s3:ListBucketMultipartUploads
+        - PolicyName: branch-project-1985-dynamodb
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - dynamodb:List*
+                  - dynamodb:DescribeReservedCapacity*
+                  - dynamodb:DescribeLimits
+                  - dynamodb:DescribeTimeToLive
+              - Effect: Allow
+                Resource: arn:aws:dynamodb:::table/branch-project-1985
+                Action: "*"
+        - PolicyName: branch-project-1985-ec2vpc-permissions
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - ec2:AttachNetworkInterface
+                  - ec2:CreateNetworkInterface
+                  - ec2:DeleteNetworkInterface
+                  - ec2:DescribeInstances
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DetachNetworkInterface
+                  - ec2:ModifyNetworkInterfaceAttribute
+                  - ec2:ResetNetworkInterfaceAttribute
+      Tags:
+        - Key: NameTag
+          Value: branch-project-1985

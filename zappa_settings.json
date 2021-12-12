@@ -1,0 +1,19 @@
+{
+    "branch": {
+       "project_name": "branch-project-1985",
+       "lambda_handler": "app.main.lambda_handler",
+       "keep_warm": false,
+       "exclude": [".pytest_cache", "pip*", "setuptool*", "wheel*", "cfnlint*",
+            "boto3*", "botocore*", "s3transfe*", "venv*", "uvloop*", "unicorn*",
+            "troposphere", "pkg_resources", "chardet", "urllib3", "*dist-info",
+            "text_unidecode*", "certifi*", "click*", "idna*", "dateutil*",
+            "hjson*", "tqdm*", "libfuturize*", "kappa*", "placebo*",
+            "jmespath*", "libpasteurize*", "importlib_metadata*", "toml*",
+            "cfn_flip*", "cfn_tool*", "slugify*", "cfn_clean*", ".env*", "yaml*",
+            "networkx*", "mypy*", "typed_ast*", "docker*", "jinja*", "taskcat*",
+            "pyflakes*", "mock*", "black*", "virtualenv*", "flake8*", "dulwich*",
+            "regex*", "*gnu.so", "samtranslator*", ".vscode", "argcomplete*",
+            "__pycache__", "**/__pycache__", "**/tests", "**/testing", "*-info/",
+            "gunicorn*"]
+    }
+}

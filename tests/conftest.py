@@ -27,8 +27,8 @@ def create_branch_table(db: Any) -> None:
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
-        waiter = db.get_waiter('table_exists')
-        waiter.wait(TableName=TABLE_NAME, WaiterConfig={'Delay': 1, 'MaxAttempts': 3})
+        waiter = db.get_waiter("table_exists")
+        waiter.wait(TableName=TABLE_NAME, WaiterConfig={"Delay": 1, "MaxAttempts": 3})
     except Exception:
         pass
 
@@ -36,8 +36,8 @@ def create_branch_table(db: Any) -> None:
 def delete_branch_table(db: Any) -> None:
     try:
         db.delete_table(TableName=TABLE_NAME)
-        waiter = db.get_waiter('table_not_exists')
-        waiter.wait(TableName=TABLE_NAME, WaiterConfig={'Delay': 1, 'MaxAttempts': 3})
+        waiter = db.get_waiter("table_not_exists")
+        waiter.wait(TableName=TABLE_NAME, WaiterConfig={"Delay": 1, "MaxAttempts": 3})
     except Exception:
         pass
 

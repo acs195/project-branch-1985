@@ -50,7 +50,7 @@ class BaseRepo(abc.ABC):
             item_template = {
                 self.PK_NAME: {"S": self.PK_TEMPLATE.format(pk)},
                 self.SK_NAME: {"S": self.SK_TEMPLATE},
-                **{key: {"S": value} for key, value in item_create.items()}
+                **{key: {"S": value} for key, value in item_create.items()},
             }
             self.db.put_item(TableName=self.TABLE_NAME, Item=item_template)
             return self.MODEL(**obj_create)
