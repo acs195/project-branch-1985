@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from app.repos.db.database import get_db
 
-TABLE_NAME = "project-branch-1985"
+TABLE_NAME = "branch-project-1985"
 
 
 def create_branch_table(db: Any) -> None:

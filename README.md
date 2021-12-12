@@ -1,4 +1,4 @@
-# project-branch-1985: this is an exercise for branch energy
+# branch-project-1985: this is an exercise for branch energy
 
 This API provides the following feature:
 - Get information by branch_id

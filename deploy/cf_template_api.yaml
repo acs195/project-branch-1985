@@ -37,7 +37,7 @@ Resources:
           ENV_NAME: dev
           LOG_LEVEL: INFO
           SECRET_KEY: yCWSozCORtMq_vHSAjkHPFtJuZd50Fb26rzTY7uK1BiwhRgpBaNnWpJeYNLZxfUYCdOPSXQiLomBsrQtp36Fwh
-          API_GATEWAY_URL_BRANCH: project-branch-1985
+          API_GATEWAY_URL_BRANCH: branch-project-1985
           INSTANTIATE_LAMBDA_HANDLER_ON_IMPORT: true
       Events:
         HttpApiEventGet:
