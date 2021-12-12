@@ -10,36 +10,56 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from app.repos.db.database import get_db
 
-DB = boto3.resource("dynamodb", endpoint_url="http://localhost:4567")
+TABLE_NAME = "project-branch-1985"
+
+
+def create_branch_table(db: Any) -> None:
+    try:
+        db.create_table(
+            TableName=TABLE_NAME,
+            AttributeDefinitions=[
+                {"AttributeName": "branch_id", "AttributeType": "S"},
+                {"AttributeName": "data", "AttributeType": "S"},
+            ],
+            KeySchema=[
+                {"AttributeName": "branch_id", "KeyType": "HASH"},
+                {"AttributeName": "data", "KeyType": "RANGE"},
+            ],
+            ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
+        )
+        waiter = db.get_waiter('table_exists')
+        waiter.wait(TableName=TABLE_NAME, WaiterConfig={'Delay': 1, 'MaxAttempts': 3})
+    except Exception:
+        pass
+
+
+def delete_branch_table(db: Any) -> None:
+    try:
+        db.delete_table(TableName=TABLE_NAME)
+        waiter = db.get_waiter('table_not_exists')
+        waiter.wait(TableName=TABLE_NAME, WaiterConfig={'Delay': 1, 'MaxAttempts': 3})
+    except Exception:
+        pass
 
 
 def get_test_db() -> Any:
     """Get a local DDB resource"""
+    db = boto3.client("dynamodb", endpoint_url="http://localhost:4567")
+    create_branch_table(db)
     try:
-        yield DB
+        yield db
     except Exception as e:
         raise e
-
-
-@pytest.fixture(scope="session")
-def db(client: TestClient) -> Any:
-    DB.create_table(
-        TableName="project-branch-1985",
-        AttributeDefinitions=[
-            {"AttributeName": "branch_id", "AttributeType": "S"},
-            {"AttributeName": "data", "AttributeType": "S"},
-        ],
-        KeySchema=[
-            {"AttributeName": "branch_id", "KeyType": "HASH"},
-            {"AttributeName": "data", "KeyType": "RANGE"},
-        ],
-        ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
-    )
-    try:
-        yield DB
     finally:
-        for table in DB.tables.iterator():
-            table.delete()
+        delete_branch_table(db)
+
+
+@pytest.fixture
+def db() -> Any:
+    db = boto3.client("dynamodb", endpoint_url="http://localhost:4567")
+    create_branch_table(db)
+    yield db
+    delete_branch_table(db)
 
 
 @pytest.fixture(scope="session")

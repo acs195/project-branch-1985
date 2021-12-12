@@ -24,7 +24,7 @@ class BranchService:
     def create(self, branch_create: BranchCreateSchema, created_by: str) -> Branch:
         """Add branch to repo"""
         branch_db = self.branch_repo.create(
-            {**branch_create.dict(), "created_by": created_by, "created_on": str(AwareDatetime.now())}
+            {**branch_create.dict(exclude_unset=True, exclude_none=True), "created_by": created_by, "created_on": str(AwareDatetime.now())}
         )
         branch = Branch(**branch_db.dict())
         return branch
@@ -36,7 +36,7 @@ class BranchService:
         branch_db = self.branch_repo.update(
             branch_id,
             {
-                **branch_update.dict(exclude_unset=True),
+                **branch_update.dict(exclude_unset=True, exclude_none=True),
                 "updated_by": updated_by,
                 "updated_on": str(AwareDatetime.now()),
             },

@@ -7,7 +7,9 @@ import boto3
 
 def get_db() -> Any:
     """Get a DDB resource"""
-    db = boto3.resource("dynamodb", endpoint_url="http://localhost:4567")
+    # TODO: delete the endpoint_url (it was for testing purposes only)
+    # db = boto3.client("dynamodb", endpoint_url="http://localhost:4567")
+    db = boto3.client("dynamodb")
     try:
         yield db
     except Exception as e:

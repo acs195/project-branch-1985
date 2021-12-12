@@ -23,16 +23,19 @@ class BaseRepo(abc.ABC):
 
     def __init__(self, db: Any = Depends(get_db)) -> None:
         self.db = db
-        self.branch_table = db.Table(self.TABLE_NAME)
 
     def get(self, id: str) -> Optional[ModelType]:
         """Get object by id from DB"""
         try:
-            lookup_key = {self.PK_NAME: self.PK_TEMPLATE.format(id), self.SK_NAME: self.SK_TEMPLATE}
-            response = self.branch_table.get_item(Key=lookup_key)
+            lookup_key = {
+                self.PK_NAME: {"S": self.PK_TEMPLATE.format(id)},
+                self.SK_NAME: {"S": self.SK_TEMPLATE},
+            }
+            response = self.db.get_item(TableName=self.TABLE_NAME, Key=lookup_key)
             item = response.get("Item")
             if item:
-                return self.MODEL(**item)
+                parsed_item = {key: list(value.values())[0] for key, value in item.items()}
+                return self.MODEL(**parsed_item)
             else:
                 return None
         except Exception as e:
@@ -45,11 +48,11 @@ class BaseRepo(abc.ABC):
         try:
             pk = item_create.pop(self.PK_NAME)
             item_template = {
-                self.PK_NAME: self.PK_TEMPLATE.format(pk),
-                self.SK_NAME: self.SK_TEMPLATE,
-                **item_create,
+                self.PK_NAME: {"S": self.PK_TEMPLATE.format(pk)},
+                self.SK_NAME: {"S": self.SK_TEMPLATE},
+                **{key: {"S": value} for key, value in item_create.items()}
             }
-            self.branch_table.put_item(Item=item_template)
+            self.db.put_item(TableName=self.TABLE_NAME, Item=item_template)
             return self.MODEL(**obj_create)
         except Exception as e:
             logger.error(f"Error on create item: {e}")
@@ -59,20 +62,23 @@ class BaseRepo(abc.ABC):
         """Update an object into the DB"""
         try:
             update_key = {
-                self.PK_NAME: self.PK_TEMPLATE.format(id),
-                self.SK_NAME: self.SK_TEMPLATE,
+                self.PK_NAME: {"S": self.PK_TEMPLATE.format(id)},
+                self.SK_NAME: {"S": self.SK_TEMPLATE},
             }
             update_expression = "SET " + ", ".join([f"{key} = :{key}" for key, _ in obj_update.items()])
-            expression_values = {f":{key}": value for key, value in obj_update.items()}
+            expression_values = {f":{key}": {"S": value} for key, value in obj_update.items()}
+            # expression_values = {f":{key}": value for key, value in obj_update.items()}
 
-            response = self.branch_table.update_item(
+            response = self.db.update_item(
+                TableName=self.TABLE_NAME,
                 Key=update_key,
                 UpdateExpression=update_expression,
                 ExpressionAttributeValues=expression_values,
                 ReturnValues="ALL_NEW",
             )
             item = response.get("Attributes")
-            return self.MODEL(**item)
+            parsed_item = {key: list(value.values())[0] for key, value in item.items()}
+            return self.MODEL(**parsed_item)
         except Exception as e:
             logger.error(f"Error on create item: {e}")
             raise

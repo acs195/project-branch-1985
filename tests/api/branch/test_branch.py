@@ -38,8 +38,8 @@ def test_update_branch(client: TestClient, branch: Branch) -> None:
         external_payments_card_id="cus_KNGEt7NfzitisQ",
         external_ledger_id="20-1000159x",
     )
-    branch_updated = branch.dict()
-    branch_updated.update(**update_branch)
+    expected_branch = branch.dict(exclude_none=True)
+    expected_branch.update(**update_branch, updated_by="1")
 
     response = client.put(
         f"{TEST_API_VERSION}/branches/{branch.branch_id}",
@@ -49,4 +49,4 @@ def test_update_branch(client: TestClient, branch: Branch) -> None:
     response_branch_updated = response.json()
     response_branch_updated.pop("updated_on")
     assert response.status_code == 200, response.text
-    assert response_branch_updated == branch_updated
+    assert response_branch_updated == jsonable_encoder(expected_branch)

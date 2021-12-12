@@ -18,7 +18,6 @@ def branch(db: Any) -> Branch:
         external_ledger_id="20-1000159",
         # external_payments_card_id="cus_KNGEt7NfzitisQ",
         created_on=AwareDatetime.now(),
-        updated_on=None,
     )
-    BranchRepo(db=db).create(jsonable_encoder(branch_db.dict()))
+    BranchRepo(db=db).create(jsonable_encoder(branch_db.dict(exclude_unset=True, exclude_none=True)))
     yield Branch(**branch_db.dict())
