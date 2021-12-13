@@ -11,6 +11,19 @@ from app.utils.exceptions.handlers import branch_exception_handler
 router = APIRouter()
 
 
+@router.get("/", response_model=BranchSchema)
+@branch_exception_handler
+def get_branch_by_bill_acct(
+    bill_acct_id: str,
+    security: UserSecurity = Depends(),
+    branch_repo: BranchRepo = Depends(),
+) -> BranchSchema:
+    """Get a single branch"""
+    branch_srv = BranchService(branch_repo)
+    branch = branch_srv.get_by_bill_acct(bill_acct_id)
+    return branch
+
+
 @router.get("/{branch_id}", response_model=BranchSchema)
 @branch_exception_handler
 def get_branch(

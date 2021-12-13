@@ -67,7 +67,6 @@ class BaseRepo(abc.ABC):
             }
             update_expression = "SET " + ", ".join([f"{key} = :{key}" for key, _ in obj_update.items()])
             expression_values = {f":{key}": {"S": value} for key, value in obj_update.items()}
-            # expression_values = {f":{key}": value for key, value in obj_update.items()}
 
             response = self.db.update_item(
                 TableName=self.TABLE_NAME,

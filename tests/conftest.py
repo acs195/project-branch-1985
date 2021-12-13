@@ -25,6 +25,17 @@ def create_branch_table(db: Any) -> None:
                 {"AttributeName": "branch_id", "KeyType": "HASH"},
                 {"AttributeName": "data", "KeyType": "RANGE"},
             ],
+            GlobalSecondaryIndexes=[
+                {
+                    "IndexName": "bill_acct",
+                    "KeySchema": [{"AttributeName": "data", "KeyType": "HASH"}],
+                    "Projection": {"ProjectionType": "ALL"},
+                    "ProvisionedThroughput": {
+                        "ReadCapacityUnits": 1,
+                        "WriteCapacityUnits": 1
+                    }
+                },
+            ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
         waiter = db.get_waiter("table_exists")

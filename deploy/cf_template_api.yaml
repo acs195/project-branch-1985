@@ -27,7 +27,7 @@ Resources:
       Handler: app.main.lambda_handler
       CodeUri: s3://branch-project-1985-storage/branch-project-1985-api.zip
       PackageType: Zip
-      Role: !Join ["", ["arn:aws:iam::", !Ref AWS::AccountId, ":role/branch-project-1985-role"]]
+      Role: !Join [":", ["arn:aws:iam:", !Ref AWS::AccountId, "role/branch-project-1985-role"]]
       MemorySize: 256
       Timeout: 10
       Runtime: python3.9

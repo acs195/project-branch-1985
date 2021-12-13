@@ -21,3 +21,12 @@ def branch(db: Any) -> Branch:
     )
     BranchRepo(db=db).create(jsonable_encoder(branch_db.dict(exclude_unset=True, exclude_none=True)))
     yield Branch(**branch_db.dict())
+
+
+@pytest.fixture
+def branch_with_bill_accts(db: Any, branch: Branch) -> Branch:
+    bill_acct_1 = "40-100881",
+    bill_acct_2 = "40-100882",
+    BranchRepo(db=db).update(branch.branch_id, {"bill_acct": bill_acct_1})
+    branch_db = BranchRepo(db=db).update(branch.branch_id, {"bill_acct": bill_acct_2})
+    yield Branch(**branch_db.dict(exclude_unset=True, exclude_none=True, exclude={"data"}))

@@ -37,6 +37,16 @@ Resources:
           KeyType: HASH
         - AttributeName: data
           KeyType: RANGE
+      GlobalSecondaryIndexes: 
+        - IndexName: bill_acct
+          KeySchema:
+            - AttributeName: data
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
@@ -135,7 +145,7 @@ Resources:
                   - dynamodb:DescribeLimits
                   - dynamodb:DescribeTimeToLive
               - Effect: Allow
-                Resource: arn:aws:dynamodb:::table/branch-project-1985
+                Resource: !Join [":", ["arn:aws:dynamodb", !Ref AWS::Region, !Ref AWS::AccountId, "table/branch-project-1985"]]
                 Action: "*"
         - PolicyName: branch-project-1985-ec2vpc-permissions
           PolicyDocument:

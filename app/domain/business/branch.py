@@ -21,6 +21,14 @@ class BranchService:
 
         return Branch(**branch_db.dict())
 
+    def get_by_bill_acct(self, bill_acct_id: str) -> Branch:
+        """Get branch by billing account id from repo"""
+        branch_db = self.branch_repo.get_by_bill_acct(bill_acct_id)
+        if not branch_db:
+            raise BranchNotFound(bill_acct_id)
+
+        return Branch(**branch_db.dict())
+
     def create(self, branch_create: BranchCreateSchema, created_by: str) -> Branch:
         """Add branch to repo"""
         branch_db = self.branch_repo.create(
