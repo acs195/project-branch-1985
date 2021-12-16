@@ -53,10 +53,8 @@ def test_update_branch(client: TestClient, branch: Branch) -> None:
 
 
 def test_get_by_bill_acct(client: TestClient, branch_with_bill_accts: Branch) -> None:
-    expected_branch = branch_with_bill_accts.dict(exclude_none=True)
-
     response = client.get(f"{TEST_API_VERSION}/branches/?bill_acct_id=40-100881")
 
     response_branch = response.json()
     assert response.status_code == 200, response.text
-    assert response_branch == jsonable_encoder(expected_branch)
+    assert response_branch["branch_id"] == branch_with_bill_accts.branch_id

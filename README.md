@@ -5,6 +5,9 @@ This API provides the following features:
 - Insert a new branch_id with its information
 - Update the data related to a branch_id
 
+## Swagger docs:
+Find it under: url[:port]/docs
+
 ## Notes/decisions about the project:
 - I chose to write a fully structured api over just functions. Mainly because of order and maintainability. The API may not meet the response times expected because of it.
 - I chose non-sql (dynamodb) over sql because of speed, scalability and better handling of additional (unplanned) attributes.
@@ -22,6 +25,7 @@ This API provides the following features:
   * 3hs: more the deployment script and cloudformation template.
   * 2hs: more coding and testing.
   * 1h: cleaning and final notes.
+  * 1h: finished some unfinished part of the global secondary index.
 
 ## DB setup
 The information is stored in a DynamoDB table

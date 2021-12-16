@@ -8,7 +8,7 @@ from app.core.config import AppEnvironmentEnum, settings
 
 # Swagger settings
 openapi_url = f"{settings.API_V1_STR}/openapi.json"
-docs_url = f"/docs-{settings.PROJECT_NAME}"
+docs_url = "/docs"
 
 if settings.ENV_NAME == AppEnvironmentEnum.PROD.value:
     # Do not provide swagger access for production

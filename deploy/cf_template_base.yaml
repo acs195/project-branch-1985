@@ -30,17 +30,17 @@ Resources:
       AttributeDefinitions:
         - AttributeName: branch_id
           AttributeType: S
-        - AttributeName: data
+        - AttributeName: data_key
           AttributeType: S
       KeySchema:
         - AttributeName: branch_id
           KeyType: HASH
-        - AttributeName: data
+        - AttributeName: data_key
           KeyType: RANGE
       GlobalSecondaryIndexes: 
         - IndexName: bill_acct
           KeySchema:
-            - AttributeName: data
+            - AttributeName: data_key
               KeyType: HASH
           Projection:
             ProjectionType: ALL

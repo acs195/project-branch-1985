@@ -19,21 +19,18 @@ def create_branch_table(db: Any) -> None:
             TableName=TABLE_NAME,
             AttributeDefinitions=[
                 {"AttributeName": "branch_id", "AttributeType": "S"},
-                {"AttributeName": "data", "AttributeType": "S"},
+                {"AttributeName": "data_key", "AttributeType": "S"},
             ],
             KeySchema=[
                 {"AttributeName": "branch_id", "KeyType": "HASH"},
-                {"AttributeName": "data", "KeyType": "RANGE"},
+                {"AttributeName": "data_key", "KeyType": "RANGE"},
             ],
             GlobalSecondaryIndexes=[
                 {
                     "IndexName": "bill_acct",
-                    "KeySchema": [{"AttributeName": "data", "KeyType": "HASH"}],
+                    "KeySchema": [{"AttributeName": "data_key", "KeyType": "HASH"}],
                     "Projection": {"ProjectionType": "ALL"},
-                    "ProvisionedThroughput": {
-                        "ReadCapacityUnits": 1,
-                        "WriteCapacityUnits": 1
-                    }
+                    "ProvisionedThroughput": {"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
                 },
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},

@@ -10,9 +10,9 @@ class BranchDDB(BaseModel):
     """This class represents a branch in the domain"""
 
     branch_id: str
-    crm_id: str
-    created_by: str
-    created_on: datetime
+    crm_id: Optional[str]
+    created_by: Optional[str]
+    created_on: Optional[datetime]
     updated_on: Optional[datetime]
 
     class Config:

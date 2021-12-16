@@ -18,7 +18,7 @@ def get_branch_by_bill_acct(
     security: UserSecurity = Depends(),
     branch_repo: BranchRepo = Depends(),
 ) -> BranchSchema:
-    """Get a single branch"""
+    """Get a single branch by billing account  ## THIS IS NOT ENTIRELY FINISHED ##"""
     branch_srv = BranchService(branch_repo)
     branch = branch_srv.get_by_bill_acct(bill_acct_id)
     return branch

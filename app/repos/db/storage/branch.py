@@ -14,24 +14,25 @@ class BranchRepo(BaseRepo):
     TABLE_NAME = "branch-project-1985"
     PK_NAME = "branch_id"
     PK_TEMPLATE = "BRANCH#{}"
-    SK_NAME = "data"
+    SK_NAME = "data_key"
     SK_TEMPLATE = "METADATA"
     INDEX_BILL_ACCT = "bill_acct"
     SK_TEMPLATE_BILL_ACCT = "BILL_ACCT#{}"
 
     def get_by_bill_acct(self, bill_acct_id: str) -> Optional[BranchDDB]:
         """Get object by billing account id from DB"""
-        # TODO: this is not finished
         try:
-            lookup_key = {
-                self.INDEX_BILL_ACCT: {"S": self.SK_TEMPLATE_BILL_ACCT.format(bill_acct_id)},
-            }
             response = self.db.query(
-                TableName=self.TABLE_NAME, IndexName=self.INDEX_BILL_ACCT, Key=lookup_key
+                TableName=self.TABLE_NAME,
+                IndexName=self.INDEX_BILL_ACCT,
+                KeyConditionExpression="data_key = :bill_acct_id",
+                ExpressionAttributeValues={
+                    ":bill_acct_id": {"S": self.SK_TEMPLATE_BILL_ACCT.format(bill_acct_id)}
+                },
             )
-            item = response.get("Item")
-            if item:
-                parsed_item = {key: list(value.values())[0] for key, value in item.items()}
+            items = response.get("Items")
+            if items:
+                parsed_item = {key: list(value.values())[0] for key, value in items[0].items()}
                 return self.MODEL(**parsed_item)
             else:
                 return None
